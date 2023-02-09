@@ -212,7 +212,7 @@ c_create_datetime   |datetime   |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime   |CURRENT_TIMESTAMP|NO      |修改时间
 c_number            |varchar(50)|                 |NO      |用户号
 c_status            |tinyint    |                 |NO      |用户状态[-1:未激活 0:正常]
-c_freeze_end_time   |datetime   |                 |YES     |冻结结束时间
+c_freeze_end_time   |datetime   |NULL             |YES     |冻结结束时间
 
 ##### 2.2.2 Indexes
 Key                 |Type |Unique|Columns        |Comments
@@ -239,7 +239,7 @@ CREATE TABLE `t_user` (
 
 - 一、新增`t_user_number`表，仅一个字段用户号，并对此字段建立唯一索引。该表中记录的用户号都是正在使用或者已经使用过的用户号。
 - 二、新增的`t_user_number`表分库分表时按用户号字段进行数据切分。
-- 三、`t_user`表插入新的用户号时，需要检查`t_user_number`表中是否存在此用户号。
+- 三、`t_user`表插入新的用户号时，需要检查`t_user_number`表中是否存在此用户号，不存在才可以新增`t_user`表记录并插入用户号到`t_user_number`表。
 
 通过以上方案可以解决大数据量下的性能问题，同时保持唯一索引的有效性。
 
@@ -249,14 +249,14 @@ CREATE TABLE `t_user` (
 每个系统设计人员都很想定义一个概念和现实中的具体的人一一对应。但现实是系统很难做到识别和区分世界范围内的每个独立的人，因此系统只能依赖各个国家和地区发行的有效身份证件来进行一定程度的识别。这里我们定义出一个用户证件的概念来表达，这里的一个用户证件是指某一个国家或地区下的某一种具有公信力的身份证件。证件与用户关系具有以下一些规则与限制：
 
 - 一、一个用户可以绑定多种类型证件，但每种类型证件只能绑定一个。当期望绑定的证件被其它用户绑定时，需要其他用户与该证件的绑定关系解除后才可继续绑定。
-- 二、一个证件只能被一个用户进行绑定使用，如过某证件被其他用户绑定了，需要先解除原有绑定关系后再与当前用户进行绑定。
+- 二、一个证件只能被一个用户进行绑定使用，如果某证件被其他用户绑定了，需要先解除原有绑定关系后再与当前用户进行绑定。
 
 可能会出现如下一些特殊情况，值得考虑：
 
 - 一、某个人具有两个国家的国籍，他同时拥有这两个国家的身份证。那么这个人可以创建两个用户，然后将这两个国家的身份证分别与这两个用户进行关联。
 - 二、某个人只有一个国籍，他在本系统创建了两个用户，然后他使用这个国家的两个不同类型的身份证件分别与这两个用户进行绑定。
 
-针对上述特殊情况一，具有不同国家或地区的国籍的同一个人被我们系统识别为两个人其实也无不妥，因为我们主要关注的是身份是否真实有效。针对上述特殊情况二，我们会尽量减少一个国家和地区内可使用的身份证件类型的范围，尽可能减少一人多证件的注册情况出现，一般一个国家内都有一种统一的有效身份证件。
+针对上述特殊情况一，具有不同国家或地区的国籍的同一个人被我们系统识别为两个人其实也并无不妥，因为我们主要关注的是身份是否真实有效。针对上述特殊情况二，我们会尽量减少一个国家和地区内可使用的身份证件类型的范围，尽可能减少一人多证件的注册情况出现，一般一个国家内都有一种统一的有效身份证件。
 
 一些业务如果需要保证一个人只能办理一次某业务，那么可以要求每个国家或地区仅允许某一种证件实名的用户才可以办理此项业务。
 
@@ -435,7 +435,7 @@ CREATE TABLE `t_user_auth` (
 #### 6.1 概念与规则
 代表系统中的一个组织机构，与现实中组织机构不一定一一对应。可以是虚拟的，也可以是实际的。组织机构和用户一样可以关联企业证件，从而成为一个实名的组织机构。这里有个特殊组织机构需要说明下：
 
-- 主键编号为‘--------------------’的组织机构为代表本系统的一个组织机构，每个User默认都加入本系统，成为本系统的一个用户，用户在此组织中的昵称就是用户在本系统中的昵称，用户在此组织中的其它信息亦然，均代表在本系统中的信息，这样做主要是为了设计上的统一和简洁，使个人版和企业版应用共用的基础数据架构。
+- 主键编号为‘--------------------’的组织机构为代表本系统的一个组织机构，每个User默认都加入本系统，成为本系统的一个会员，用户在此组织中的会员昵称就是用户在本系统中的昵称，用户在此组织中的其它会员信息亦然，均代表在本系统中的信息，这样做主要是为了设计上的统一和简洁，使个人版和企业版应用共用的基础数据架构。
 
 #### 6.2 TableInfo
 Attribute          |Value   
@@ -470,14 +470,14 @@ CREATE TABLE `t_organization` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='组织机构'
 ```
 #### 6.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_id`进行数据切分。
+数据量大时，如若需要分库分表可以使用字段`c_id`进行数据切分。通过组织名称搜索组织这样的功能则需要结合使用ES等聚合搜索工具来完成。
 
 
 ### 7.组织机构证件
 #### 7.1 概念与规则
 和前面提到的用户证件一样，每个系统设计人员都很想定义一个概念和现实中的具体的组织机构一一对应。但现实是系统很难做到识别和区分世界范围内的每个独立的组织机构，因此系统只能依赖各个国家和地区发行的有效组织机构证件来进行一定程度的识别。这里我们定义出一个组织机构证件的概念来表达，这里的一个组织机构证件是指某一个国家或地区下的某一种具有公信力的证件。证件与组织机构关系具有以下一些限制：
 
-- 一、一个组织机构可以绑定多种类型证件，但每种类型的证件只能绑定一个。当期望绑定的证件被其它组织机构绑定时，需要其他组织机构与该证件解除绑定关系后才可继续绑定当前组织机构。
+- 一、一个组织机构可以绑定多种类型证件，但每种类型的证件一个组织机构只能绑定一个。当期望绑定的证件被其它组织机构绑定时，需要其他组织机构与该证件解除绑定关系后才可继续绑定当前组织机构。
 - 二、一个证件只能被一个组织机构进行绑定使用，如果某证件被其他组织机构绑定了，需要先解除绑定关系后再与当前组织机构进行绑定。
 
 可能会出现如下一些特殊情况，值得考虑：
@@ -485,7 +485,7 @@ CREATE TABLE `t_organization` (
 - 一、某个组织机构具有两个国家的证件。那么这个它可以创建两个组织机构，然后将这两个国家的证件分别与这两个组织机构进行关联。
 - 二、某组织机构在本系统创建了两个组织机构，然后他使用这个国家的两个不同类型的证件分别与这两个本系统组织机构进行绑定。
 
-针对上述特殊情况一，具有不同国家或地区的证件的同一个组织机构被我们系统识别为两个组织机构其实也无不妥，因为我们主要关注的是身份是否真实有效。针对上述特殊情况二，我们会尽量减少一个国家和地区内可使用的组织机构证件类型的范围，尽可能减少一组织机构多证件的注册情况出现，一般一个国家内都有一种统一的有效组织机构证件。
+针对上述特殊情况一，具有不同国家或地区的证件的同一个组织机构被我们系统识别为两个组织机构其实也并无不妥，因为我们主要关注的是身份是否真实有效。针对上述特殊情况二，我们会尽量减少一个国家和地区内可使用的组织机构证件类型的范围，尽可能减少一组织机构多证件的注册情况出现，一般一个国家内都有一种统一的有效组织机构证件。
 
 一些业务如果需要保证一个组织机构只能办理一次某业务，那么可以要求每个国家或地区仅允许某一种证件实名的组织机构才可以办理此项业务。
 
@@ -572,7 +572,7 @@ c_create_datetime |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_organization_id |varchar(20) |                 |NO      |所属组织机构编号
 c_parent_id       |varchar(20) |                 |YES     |父部门编号（null表示一级部门，即默认根部门）
-c_department_route|varchar(200)|                 |NO      |父部门路径[根节点到本节点的编号使用|线作为分割拼接起来]
+c_department_route|varchar(200)|                 |NO      |部门路径[根节点到本节点的编号使用|线作为分割拼接起来]
 c_department_name |varchar(50) |                 |NO      |部门名称
 
 ##### 8.2.2 Indexes
@@ -592,7 +592,7 @@ CREATE TABLE `t_department` (
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属组织机构编号',
   `c_parent_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '父部门编号（null表示一级部门，即默认根部门）',
-  `c_department_route` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '父部门路径[根节点到本节点的编号使用|线作为分割拼接起来]',
+  `c_department_route` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '部门路径[根节点到本节点的编号使用|线作为分割拼接起来]',
   `c_department_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '部门名称',
   PRIMARY KEY (`c_id`),
   KEY `i_organization_id` (`c_organization_id`) USING BTREE COMMENT '所属组织机构编号索引',
@@ -650,10 +650,10 @@ CREATE TABLE `t_group` (
 
 ### 10 会员
 #### 10.1 概念与规则
-代表组织机构与用户间的关系，我们将此定义为会员。这条信息记录的就是这个用户在这个组织机构中的信息。一个用户在一个组织机构中最多只能有一条会员记录。会员表示的是用户在组织机构中的一个关系。需要代表某组织机构或者需要以某组织机构身份进行的业务操作场景应该将操作信息对应记录在会员这个概念上。用户在本系统中的信息如果不是通用于所有组织机构上，则应该记录在本系统组织机构对应的那条会员记录上。
+代表组织机构与用户间的关系，我们将此定义为会员。会员信息记录的就是这个用户在这个组织机构中的信息。一个用户在一个组织机构中最多只能有一条会员记录。会员表示的是用户在组织机构中的一个关系。需要代表某组织机构或者需要以某组织机构身份进行的业务操作场景应该将操作信息对应记录在会员这个概念上。用户在本系统中的信息如果不是通用于所有组织机构上，则应该记录在本系统组织机构对应的那条会员记录上。
 
-- 一个用户可以加入零个、一个或者多个组织机构，从而成为多个组织机构中的会员。
-- 一个组织机构可以包含零个、一个或者多个会员，每个会员就是用户在这个组织机构的关系表示。
+- 一个用户可以加入一个或者多个组织机构，从而成为一个或者多个组织机构中的会员（用户至少是本系统组织机构的会员）。
+- 一个组织机构可以包含一个或者多个会员，每个会员就是用户在这个组织机构的关系表示（每个组织机构至少有一个会员）。
 - 同一组织机构中的任意两个会员不能对应于同一用户。
 
 #### 10.2 TableInfo
@@ -674,7 +674,7 @@ c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_organization_id   |varchar(20) |                 |NO      |关联组织机构编号[--------------------:代表本系统组织机构编号，每个User默认都加入本系统，成为本系统组织机构的一个用户]
 c_user_id           |varchar(20) |                 |NO      |关联用户编号
 c_nickname          |varchar(50) |                 |NO      |组织机构内昵称[用户在本系统组织机构内的昵称即为本系统内昵称]
-c_personal_signature|varchar(200)|                 |NO      |组织机构内个性签名[用户在本系统组织机构内的个性签名即为本系统内个性签名]
+c_personal_signature|varchar(200)|NULL             |YES     |组织机构内个性签名[用户在本系统组织机构内的个性签名即为本系统内个性签名]
 c_administrator_tag |tinyint     |                 |NO      |组织机构管理员标记[1:普通人员 3:管理员 7:拥有者]
 
 ##### 10.2.2 Indexes
@@ -733,8 +733,8 @@ Column             |Type        |Default Value    |Nullable|Comments
 c_id               |varchar(20) |                 |NO      |主键编号
 c_create_datetime  |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime  |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
-c_member_id        |varchar(20) |                 |NO      |会员编号
 c_organization_id  |varchar(20) |                 |NO      |所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
+c_member_id        |varchar(20) |                 |NO      |会员编号
 c_department_id    |varchar(20) |                 |NO      |所属部门编号
 
 ##### 11.2.2 Indexes
@@ -750,8 +750,8 @@ CREATE TABLE `t_member_department` (
   `c_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键编号',
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
   `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
   `c_department_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属部门编号',
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `u_member_id_department_id` (`c_member_id`,`c_department_id`) USING BTREE COMMENT '会员编号所属部门编号唯一索引',
@@ -760,13 +760,7 @@ CREATE TABLE `t_member_department` (
 ```
 
 #### 11.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_member_id`进行数据切分。但这样就会导致使用`c_department_id`字段进行查询本表时无法定位出具体的库和表。和前面一样，方案如下：
-
-- 一、新增`t_member_department_reverse`表，该表结构与`t_member_department`结构一模一样。
-- 二、新增的`t_member_department_reverse`表分库分表时按`c_department_id`字段进行数据切分。
-- 三、`t_member_department_reverse`表与`t_member_department`表数据同步维护更新，保持一致性。
-
-通过以上方案可以解决大数据量下的性能问题，同时保持唯一索引的有效性。
+数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。
 
 
 ### 12 会员联系人
@@ -792,7 +786,6 @@ c_organization_id  |varchar(20)|                 |NO      |会员所属组织机
 c_member_id        |varchar(20)|                 |NO      |会员编号
 c_contact_organization_id|varchar(20)|           |NO      |联系人所属组织机构编号[为冗余字段，用于快速确认联系人是否位于本组织机构内部]
 c_contact_member_id|varchar(20)|                 |NO      |联系人编号
-
 
 ##### 12.2.2 Indexes
 Key                          |Type |Unique|Columns        |Comments
@@ -841,6 +834,7 @@ c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_group_id          |varchar(20) |                 |NO      |群组编号
 c_member_id         |varchar(20) |                 |NO      |会员编号
+c_organization_id   |varchar(20) |                 |NO      |会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
 c_administrator_tag |tinyint     |                 |NO      |群组管理员标记[1:普通人员 3:管理员 7:群主]
 
 ##### 13.2.2 Indexes
@@ -857,6 +851,7 @@ CREATE TABLE `t_group_member` (
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_group_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '群组编号',
   `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
+  `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
   `c_administrator_tag` tinyint NOT NULL COMMENT '群组管理员标记[1:普通人员 3:管理员 7:群主]',
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `u_group_id_member_id` (`c_group_id`,`c_member_id`) USING BTREE COMMENT '群组编号会员编号唯一索引',
@@ -867,7 +862,7 @@ CREATE TABLE `t_group_member` (
 数据量大时，如若需要分库分表可以使用字段`c_group_id`进行数据切分。但这样就会导致使用`c_member_id`字段进行查询本表时无法定位出具体的库和表。和前面一样，方案如下：
 
 - 一、新增`t_group_member_reverse`表，该表结构与`t_group_member`结构一模一样。
-- 二、新增的`t_group_member_reverse`表分库分表时按`c_member_id`字段进行数据切分。
+- 二、新增的`t_group_member_reverse`表分库分表时按`c_organization_id`字段进行数据切分。
 - 三、`t_group_member_reverse`表与`t_group_member`表数据同步维护更新，保持一致性。
 
 通过以上方案可以解决大数据量下的性能问题，同时保持唯一索引的有效性。
@@ -899,7 +894,7 @@ c_app_desc          |varchar(200)|                 |NO      |应用描述
 c_app_number        |varchar(50) |                 |NO      |应用号
 c_app_type          |tinyint     |                 |NO      |应用类型[1:移动应用 2:网站应用 3:小程序 4:公众号]
 c_status            |tinyint     |                 |NO      |应用状态[-1:未激活 0:正常]
-c_freeze_end_time   |datetime    |                 |YES     |冻结结束时间
+c_freeze_end_time   |datetime    |NULL             |YES     |冻结结束时间
 c_owner_id          |varchar(20) |                 |NO      |应用归属人
 c_owner_type        |tinyint     |                 |NO      |应用归属人类型[1:用户 2:组织机构]
 
@@ -932,20 +927,48 @@ CREATE TABLE `t_app` (
 ```
 
 #### 1.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_id`进行数据切分。但这样会导致`u_app_number`的唯一性失效，解决方案可以是如下这样：
+数据量大时，如若需要分库分表可以使用字段`c_id`进行数据切分。
 
+##### 1.3.1 应用号唯度优化
+使用字段`c_id`进行数据切分后会导致`u_app_number`的唯一性失效，解决方案可以是如下这样：
 - 一、新增`t_app_number`表，仅一个字段应用号，并对此字段建立唯一索引。该表中记录的应用号都是正在使用或者已经使用过的应用号。
 - 二、新增的`t_app_number`表分库分表时按应用号字段进行数据切分。
-- 三、`t_app`表插入新的应用号时，需要检查`t_app_number`表中是否存在此应用号。
+- 三、`t_app`表插入新的应用号时，需要检查`t_app_number`表中是否存在此应用号。若不存在才可进行插入`t_app`操作，并将此应用号也记录入`t_app_number`。
 
-同时也会导致使用`c_owner_id`字段进行查询本表时无法定位出具体的库和表。和前面一样，方案如下：
+##### 1.3.2 应用归属人唯度优化
+使用字段`c_id`进行数据切分后同时也会导致使用`c_owner_id`字段进行查询本表时无法定位出具体的库和表。和前面一样，方案如下：
 
-- 一、新增`t_app_reverse`表，该表结构与`t_app`结构一模一样。
-- 二、新增的`t_app_reverse`表分库分表时按`c_owner_id`字段进行数据切分。
-- 三、`t_app_reverse`表与`t_app`表数据同步维护更新，保持一致性。
+- 一、新增`t_app_owner`表，该表结构仅含`t_app`表的核心字段。
+- 二、新增的`t_app_owner`表分库分表时按`c_owner_id`字段进行数据切分。
+- 三、`t_app_owner`表与`t_app`表数据同步维护更新，保持一致性。
 
-通过以上方案可以解决大数据量下的性能问题，同时保持唯一索引的有效性。
+###### 1.3.2.1 Columns
+Column              |Type        |Default Value    |Nullable|Comments
+--------------------|------------|-----------------|--------|--------
+c_id                |varchar(20) |                 |NO      |主键编号
+c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
+c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
+c_owner_id          |varchar(20) |                 |NO      |应用归属人
+c_owner_type        |tinyint     |                 |NO      |应用归属人类型[1:用户 2:组织机构]
 
+###### 1.3.2.2 Indexes
+Key                 |Type |Unique|Columns        |Comments
+--------------------|-----|------|---------------|--------
+PRIMARY             |BTREE|YES   |c_id           |主键索引
+i_owner_id          |BTREE|NO    |c_owner_id     |应用归属人编号索引
+
+###### 1.3.2.3 DDL
+```sql
+CREATE TABLE `t_app_owner` (
+  `c_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键编号（即AppID）',
+  `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `c_owner_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '应用归属人编号',
+  `c_owner_type` tinyint NOT NULL COMMENT '应用归属人类型[1:用户 2:组织机构]',
+  PRIMARY KEY (`c_id`),
+  KEY `i_owner_id` (`c_owner_id`) USING BTREE COMMENT '应用归属人编号索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='应用归属人'
+```
 
 ### 2.组织机构订阅应用
 #### 2.1 概念与规则
@@ -991,7 +1014,7 @@ CREATE TABLE `t_organization_subscribed_app` (
 ```
 
 #### 2.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。使用`c_app_id`进行在线交易的查询场景很少，一般都是统计应用被订阅数量等需求，这可以采用其它大数据聚合方案进行查询操作。
+数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。使用`c_app_id`进行在线交易的查询场景很少，一般都是统计应用被订阅数量等需求，这可以采用其它数据聚合方案进行查询操作。
 
 
 ### 3.会员订阅应用
@@ -1013,7 +1036,7 @@ Column              |Type        |Default Value    |Nullable|Comments
 c_id                |varchar(20) |                 |NO      |主键编号
 c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
-c_organization_id   |varchar(20) |                 |NO      |组织机构编号[为冗余字段，主要用于数据的分库分表使用]
+c_organization_id   |varchar(20) |                 |NO      |组织机构编号
 c_member_id         |varchar(20) |                 |NO      |会员编号
 c_app_id            |varchar(20) |                 |NO      |应用编号
 
@@ -1035,11 +1058,11 @@ CREATE TABLE `t_member_subscribed_app` (
   `c_app_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '应用编号',
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `u_member_id_app_id` (`c_member_id`,`c_app_id`) USING BTREE COMMENT '会员编号应用编号唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='组织机构订阅应用'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员订阅应用'
 ```
 
 #### 3.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_member_id`进行数据切分。使用`c_app_id`进行在线交易的查询场景很少，一般都是统计应用被订阅数量等需求，这可以采用其它大数据聚合方案进行查询操作。
+数据量大时，如若需要分库分表可以使用字段`c_member_id`进行数据切分。使用`c_app_id`进行在线交易的查询场景很少，一般都是统计应用被订阅数量等需求，这可以采用其它数据聚合方案进行查询操作。
 
 
 ### 4.组织机构信息项
@@ -1322,5 +1345,5 @@ CREATE TABLE `t_authorized_personal_info_item` (
 ```
 
 #### 9.3 性能优化
-数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。
+数据量大时，如若需要分库分表可以使用字段`c_member_id`进行数据切分。
 
