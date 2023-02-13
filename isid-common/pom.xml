@@ -46,6 +46,8 @@
         <module>isid-common-parent</module>
         <module>isid-common-lang</module>
         <module>isid-common-core</module>
+        <module>isid-common-autoconfigure</module>
+        <module>isid-common-starter</module>
     </modules>
 
 </project>
