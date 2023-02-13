@@ -16,8 +16,8 @@
     <!--<version>1.1.0-RELEASE</version>-->
     <version>1.2.0-SNAPSHOT</version>
 
-    <name>isid cloud</name>
-    <description>isid cloud module</description>
+    <name>isid-cloud</name>
+    <description>isid-cloud-module</description>
     <url>https://github.com/yanghyu/isid</url>
 
     <licenses>

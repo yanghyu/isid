@@ -16,8 +16,8 @@
     <!--<version>1.1.0-RELEASE</version>-->
     <version>1.2.0-SNAPSHOT</version>
 
-    <name>isid common</name>
-    <description>isid common module</description>
+    <name>isid-common</name>
+    <description>isid-common-module</description>
     <url>https://github.com/yanghyu/isid</url>
 
     <licenses>
@@ -42,7 +42,10 @@
     </scm>
 
     <modules>
-
+        <module>isid-common-dependencies</module>
+        <module>isid-common-parent</module>
+        <module>isid-common-lang</module>
+        <module>isid-common-core</module>
     </modules>
 
 </project>
