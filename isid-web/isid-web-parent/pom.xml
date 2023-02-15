@@ -3,19 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>isid-common-dependencies</artifactId>
+        <artifactId>isid-web-dependencies</artifactId>
         <groupId>com.github.yanghyu</groupId>
-        <!--<version>1.1.0-RELEASE</version>-->
         <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../isid-common-dependencies/pom.xml</relativePath>
+        <relativePath>../isid-web-dependencies/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-common-parent</artifactId>
+    <artifactId>isid-web-parent</artifactId>
     <packaging>pom</packaging>
-
-    <name>isid-common-parent</name>
-    <description>isid-common-parent</description>
 
     <dependencies>
         <dependency>
@@ -36,17 +32,14 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>isid-common-autoconfigure</artifactId>
+                <artifactId>isid-common-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>isid-common-lang</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>isid-common-core</artifactId>
+                <artifactId>isid-web-mvc</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

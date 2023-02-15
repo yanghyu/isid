@@ -3,25 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>isid-common-parent</artifactId>
+        <artifactId>isid-web-parent</artifactId>
         <groupId>com.github.yanghyu</groupId>
         <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../isid-common-parent/pom.xml</relativePath>
+        <relativePath>../isid-web-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-common-lang</artifactId>
+    <artifactId>isid-web-autoconfigure</artifactId>
 
-    <name>isid-common-lang</name>
-    <description>isid-common-lang</description>
+    <name>isid-web-autoconfigure</name>
+    <description>isid-web-autoconfigure</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>isid-common-autoconfigure</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

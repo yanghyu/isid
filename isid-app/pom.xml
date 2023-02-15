@@ -42,7 +42,7 @@
     </scm>
 
     <modules>
-
+        <module>isid-app-service</module>
     </modules>
 
 

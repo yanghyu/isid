@@ -3,22 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>isid-common-starter</artifactId>
+        <artifactId>isid-app</artifactId>
         <groupId>com.github.yanghyu</groupId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-common-starter-lang</artifactId>
+    <artifactId>isid-app-service</artifactId>
 
-    <name>isid-common-starter-lang</name>
-    <description>isid-common-starter-lang</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>isid-common-lang</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>

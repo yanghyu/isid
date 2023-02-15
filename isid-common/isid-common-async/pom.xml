@@ -11,8 +11,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>isid-common-async</artifactId>
+
     <name>isid-common-async</name>
-    <description>isid-common-async-module</description>
+    <description>isid-common-async</description>
 
     <dependencies>
         <dependency>

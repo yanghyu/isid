@@ -42,7 +42,13 @@
     </scm>
 
     <modules>
+        <module>isid-web-dependencies</module>
+        <module>isid-web-parent</module>
 
+        <module>isid-web-mvc</module>
+
+        <module>isid-web-autoconfigure</module>
+        <module>isid-web-starter</module>
     </modules>
 
 
