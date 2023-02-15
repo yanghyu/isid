@@ -20,6 +20,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>isid-common-autoconfigure</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>isid-web-mvc</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
