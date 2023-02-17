@@ -10,31 +10,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-web-autoconfigure</artifactId>
+    <artifactId>isid-web-client</artifactId>
 
-    <name>isid-web-autoconfigure</name>
-    <description>isid-web-autoconfigure</description>
+    <name>isid-web-client</name>
+    <description>isid-web-client</description>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>isid-common-autoconfigure</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>isid-web-mvc</artifactId>
-            <optional>true</optional>
+            <artifactId>isid-common-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>isid-web-tomcat</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>isid-web-client</artifactId>
-            <optional>true</optional>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
         </dependency>
     </dependencies>
 

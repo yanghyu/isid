@@ -19,6 +19,7 @@
     <modules>
         <module>isid-web-starter-mvc</module>
         <module>isid-web-starter-tomcat</module>
+        <module>isid-web-starter-client</module>
     </modules>
 
     <dependencies>
