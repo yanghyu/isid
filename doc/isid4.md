@@ -105,7 +105,7 @@ CREATE TABLE `t_app_owner` (
 
 ### 2.组织机构订阅应用
 #### 2.1 概念与规则
-本表记录组织机构订阅的应用。部分应用必需组织机构管理员订阅该应用后，该组织机构的会员才可以使用这些应用。对于所有应用，在没有获得组织机构的订阅以及组织机构信息项授权前该应用都无法获取到属于该组织机构的相关信息。
+本表记录组织机构订阅的应用。部分应用必需组织机构管理员订阅该应用后，该组织机构的成员才可以使用这些应用。对于所有应用，在没有获得组织机构的订阅以及组织机构信息项授权前该应用都无法获取到属于该组织机构的相关信息。
 
 #### 2.2 TableInfo
 Attribute          |Value   
@@ -150,9 +150,9 @@ CREATE TABLE `t_organization_subscribed_app` (
 数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。使用`c_app_id`进行在线交易的查询场景很少，一般都是统计应用被订阅数量等需求，这可以采用其它数据聚合方案进行查询操作。
 
 
-### 3.会员订阅应用
+### 3.成员订阅应用
 #### 3.1 概念与规则
-本表记录会员订阅的应用。某些应用不必需组织机构统一订阅，会员可以按需要自行订阅使用，该表记录的就是会员对这类应用的订阅情况。这些应用在没有获得组织机构的订阅和信息项授权前无法获取到属于组织机构的相关信息。
+本表记录成员订阅的应用。某些应用不必需组织机构统一订阅，成员可以按需要自行订阅使用，该表记录的就是成员对这类应用的订阅情况。这些应用在没有获得组织机构的订阅和信息项授权前无法获取到属于组织机构的相关信息。
 
 #### 3.2 TableInfo
 Attribute          |Value   
@@ -161,7 +161,7 @@ Table name         |t_member_subscribed_app
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |会员订阅应用
+Comment            |成员订阅应用
 
 ##### 3.2.1 Columns
 Column              |Type        |Default Value    |Nullable|Comments
@@ -170,7 +170,7 @@ c_id                |varchar(20) |                 |NO      |主键编号
 c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_organization_id   |varchar(20) |                 |NO      |组织机构编号
-c_member_id         |varchar(20) |                 |NO      |会员编号
+c_member_id         |varchar(20) |                 |NO      |成员编号
 c_app_id            |varchar(20) |                 |NO      |应用编号
 
 
@@ -178,7 +178,7 @@ c_app_id            |varchar(20) |                 |NO      |应用编号
 Key               |Type |Unique|Columns             |Comments
 ------------------|-----|------|--------------------|--------
 PRIMARY           |BTREE|YES   |c_id                |主键索引
-u_member_id_app_id|BTREE|YES   |c_member_id,c_app_id|会员编号应用编号唯一索引
+u_member_id_app_id|BTREE|YES   |c_member_id,c_app_id|成员编号应用编号唯一索引
 
 ##### 3.2.3 DDL
 ```sql
@@ -187,11 +187,11 @@ CREATE TABLE `t_member_subscribed_app` (
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '组织机构编号',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员编号',
   `c_app_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '应用编号',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `u_member_id_app_id` (`c_member_id`,`c_app_id`) USING BTREE COMMENT '会员编号应用编号唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员订阅应用'
+  UNIQUE KEY `u_member_id_app_id` (`c_member_id`,`c_app_id`) USING BTREE COMMENT '成员编号应用编号唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='成员订阅应用'
 ```
 
 #### 3.3 性能优化
@@ -294,7 +294,7 @@ CREATE TABLE `t_personal_info_item` (
 
 ### 6.应用运行必需的组织机构信息项
 #### 6.1 概念与规则
-本表记录的是应用正常运行必需获取到的组织机构信息项。在组织机构的会员首次进入该应用时，本系统会引导提醒该组织机构的具有管理员权限的会员进行授权。
+本表记录的是应用正常运行必需获取到的组织机构信息项。在组织机构的成员首次进入该应用时，本系统会引导提醒该组织机构的具有管理员权限的成员进行授权。
 
 #### 6.2 TableInfo
 Attribute          |Value   
@@ -341,7 +341,7 @@ CREATE TABLE `t_organization_info_item_required` (
 
 ### 7.应用运行必需的个人信息项
 #### 7.1 概念与规则
-本表记录的是应用正常运行必需获取到的个人信息项。在会员首次进入该应用时，本系统会引导提醒该会员进行授权。
+本表记录的是应用正常运行必需获取到的个人信息项。在成员首次进入该应用时，本系统会引导提醒该成员进行授权。
 
 #### 7.2 TableInfo
 Attribute          |Value   
@@ -432,9 +432,9 @@ CREATE TABLE `t_organization_info_item_authorized` (
 数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。
 
 
-### 9.会员授权给应用的个人信息项
+### 9.成员授权给应用的个人信息项
 #### 9.1 概念与规则
-记录会员授权给应用的个人信息项内容。
+记录成员授权给应用的个人信息项内容。
 
 #### 9.2 TableInfo
 Attribute          |Value   
@@ -443,7 +443,7 @@ Table name         |t_personal_info_item_authorized
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |会员授权给应用的个人信息项
+Comment            |成员授权给应用的个人信息项
 
 ##### 9.2.1 Columns
 Column              |Type        |Default Value    |Nullable|Comments
@@ -452,7 +452,7 @@ c_id                |varchar(20) |                 |NO      |主键编号
 c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_organization_id   |varchar(20) |                 |NO      |组织机构编号
-c_member_id         |varchar(20) |                 |NO      |会员编号
+c_member_id         |varchar(20) |                 |NO      |成员编号
 c_app_id            |varchar(20) |                 |NO      |应用编号
 c_personal_info_item_id|varchar(20)|               |NO      |个人信息项编号
 
@@ -460,7 +460,7 @@ c_personal_info_item_id|varchar(20)|               |NO      |个人信息项编�
 Key                 |Type |Unique|Columns        |Comments
 --------------------|-----|------|---------------|--------
 PRIMARY             |BTREE|YES   |c_id           |主键索引
-u_member_id_app_id_personal_info_item_id|BTREE|YES   |c_member_id,c_app_id,c_personal_info_item_id     |会员编号应用编号个人信息项编号唯一索引
+u_member_id_app_id_personal_info_item_id|BTREE|YES   |c_member_id,c_app_id,c_personal_info_item_id     |成员编号应用编号个人信息项编号唯一索引
 
 ##### 9.2.3 DDL
 ```sql
@@ -469,12 +469,12 @@ CREATE TABLE `t_personal_info_item_authorized` (
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '组织机构编号',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员编号',
   `c_app_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '应用编号',
   `c_personal_info_item_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '组织机构信息项编号',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `u_member_id_app_id_personal_info_item_id` (`c_member_id`,`c_app_id`,`c_personal_info_item_id`) USING BTREE COMMENT '会员编号应用编号个人信息项编号唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员授权给应用的个人信息项'
+  UNIQUE KEY `u_member_id_app_id_personal_info_item_id` (`c_member_id`,`c_app_id`,`c_personal_info_item_id`) USING BTREE COMMENT '成员编号应用编号个人信息项编号唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='成员授权给应用的个人信息项'
 ```
 
 #### 9.3 性能优化

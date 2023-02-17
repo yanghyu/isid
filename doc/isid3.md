@@ -301,7 +301,7 @@ CREATE TABLE `t_user_auth` (
 #### 6.1 概念与规则
 代表系统中的一个组织机构，与现实中组织机构不一定一一对应。可以是虚拟的，也可以是实际的。组织机构和用户一样可以关联企业证件，从而成为一个实名的组织机构。这里有个特殊组织机构需要说明下：
 
-- 主键编号为‘--------------------’的组织机构为代表本系统的一个组织机构，每个User默认都加入本系统，成为本系统的一个会员，用户在此组织中的会员昵称就是用户在本系统中的昵称，用户在此组织中的其它会员信息亦然，均代表在本系统中的信息，这样做主要是为了设计上的统一和简洁，使个人版和企业版应用共用的基础数据架构。
+- 主键编号为‘--------------------’的组织机构为代表本系统的一个组织机构，每个User默认都加入本系统，成为本系统的一个成员，用户在此组织中的成员昵称就是用户在本系统中的昵称，用户在此组织中的其它成员信息亦然，均代表在本系统中的信息，这样做主要是为了设计上的统一和简洁，使个人版和企业版应用共用的基础数据架构。
 
 #### 6.2 TableInfo
 Attribute          |Value   
@@ -315,7 +315,7 @@ Comment            |组织机构
 ##### 6.2.1 Columns
 Column              |Type        |Default Value    |Nullable|Comments
 --------------------|------------|-----------------|--------|--------
-c_id                |varchar(20) |                 |NO      |主键编号[--------------------:代表本系统的组织机构编号，每个用户默认都加入本系统组织机构，成为本系统组织机构的一个会员]
+c_id                |varchar(20) |                 |NO      |主键编号[--------------------:代表本系统的组织机构编号，每个用户默认都加入本系统组织机构，成为本系统组织机构的一个成员]
 c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_name              |varchar(100)|                 |NO      |组织名称
@@ -328,7 +328,7 @@ PRIMARY             |BTREE|YES   |c_id           |主键索引
 ##### 6.2.3 DDL
 ```sql
 CREATE TABLE `t_organization` (
-  `c_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键编号[--------------------:代表本系统的组织机构编号，每个用户默认都加入本系统组织机构，成为本系统组织机构的一个会员]',
+  `c_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键编号[--------------------:代表本系统的组织机构编号，每个用户默认都加入本系统组织机构，成为本系统组织机构的一个成员]',
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '组织名称',
@@ -416,10 +416,10 @@ CREATE TABLE `t_organization_certificate` (
 
 ### 8 部门
 #### 8.1 概念与规则
-组织机构下的部门，数据结构为树结构。每个组织机构都有一个默认根部门，这个组织机构创建的其它部门都需要挂载在默认根部门为根节点的树结构下。加入一个组织机构的用户（即“会员”，下文有介绍）不属于该组织机构的任何其他部门的话，就需要属于这个默认根部门。
+组织机构下的部门，数据结构为树结构。每个组织机构都有一个默认根部门，这个组织机构创建的其它部门都需要挂载在默认根部门为根节点的树结构下。加入一个组织机构的用户（即“成员”，下文有介绍）不属于该组织机构的任何其他部门的话，就需要属于这个默认根部门。
 
-- 一个会员可以同时属于对应组织机构下的多个部门。
-- 一个会员至少需要属于对应组织机构下的一个部门。
+- 一个成员可以同时属于对应组织机构下的多个部门。
+- 一个成员至少需要属于对应组织机构下的一个部门。
 
 #### 8.2 TableInfo
 Attribute          |Value   
@@ -473,7 +473,7 @@ CREATE TABLE `t_department` (
 
 ### 9 群组
 #### 9.1 概念与规则
-会员（下文有介绍）发起建立的一个群组。用于多人业务场景，如群聊。
+成员（下文有介绍）发起建立的一个群组。用于多人业务场景，如群聊。
 
 #### 9.2 TableInfo
 Attribute          |Value   
@@ -514,13 +514,13 @@ CREATE TABLE `t_group` (
 数据量大时，如若需要分库分表可以使用字段`c_id`进行数据切分。
 
 
-### 10 会员
+### 10 成员
 #### 10.1 概念与规则
-代表组织机构与用户间的关系，我们将此定义为会员。会员信息记录的就是这个用户在这个组织机构中的信息。一个用户在一个组织机构中最多只能有一条会员记录。会员表示的是用户在组织机构中的一个关系。需要代表某组织机构或者需要以某组织机构身份进行的业务操作场景应该将操作信息对应记录在会员这个概念上。用户在本系统中的信息如果不是通用于所有组织机构上，则应该记录在本系统组织机构对应的那条会员记录上。
+代表组织机构与用户间的关系，我们将此定义为成员。成员信息记录的就是这个用户在这个组织机构中的信息。一个用户在一个组织机构中最多只能有一条成员记录。成员表示的是用户在组织机构中的一个关系。需要代表某组织机构或者需要以某组织机构身份进行的业务操作场景应该将操作信息对应记录在成员这个概念上。用户在本系统中的信息如果不是通用于所有组织机构上，则应该记录在本系统组织机构对应的那条成员记录上。
 
-- 一个用户可以加入一个或者多个组织机构，从而成为一个或者多个组织机构中的会员（用户至少是本系统组织机构的会员）。
-- 一个组织机构可以包含一个或者多个会员，每个会员就是用户在这个组织机构的关系表示（每个组织机构至少有一个会员）。
-- 同一组织机构中的任意两个会员不能对应于同一用户。
+- 一个用户可以加入一个或者多个组织机构，从而成为一个或者多个组织机构中的成员（用户至少是本系统组织机构的成员）。
+- 一个组织机构可以包含一个或者多个成员，每个成员就是用户在这个组织机构的关系表示（每个组织机构至少有一个成员）。
+- 同一组织机构中的任意两个成员不能对应于同一用户。
 
 #### 10.2 TableInfo
 Attribute          |Value   
@@ -529,7 +529,7 @@ Table name         |t_member
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |会员
+Comment            |成员
 
 ##### 10.2.1 Columns
 Column              |Type        |Default Value    |Nullable|Comments
@@ -564,7 +564,7 @@ CREATE TABLE `t_member` (
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `u_organization_id_user_id` (`c_organization_id`,`c_user_id`) USING BTREE COMMENT '组织机构编号用户编号唯一索引',
   KEY `i_user_id` (`c_user_id`) USING BTREE COMMENT '用户编号索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='成员'
 ```
 
 #### 10.3 性能优化
@@ -577,12 +577,12 @@ CREATE TABLE `t_member` (
 通过以上方案可以解决大数据量下的性能问题，同时保持唯一索引的有效性。
 
 
-### 11 会员部门
+### 11 成员部门
 #### 11.1 概念与规则
-记录会员所属的部门信息。一个会员可以属于一个或多个部门。每个组织机构必须有一个默认根部门，会员最初加入这个组织机构时，就默认位于这个根部门下。一个会员不属于该组织机构的任何其他部门的话，他就需要属于这个默认根部门。
+记录成员所属的部门信息。一个成员可以属于一个或多个部门。每个组织机构必须有一个默认根部门，成员最初加入这个组织机构时，就默认位于这个根部门下。一个成员不属于该组织机构的任何其他部门的话，他就需要属于这个默认根部门。
 
-- 一个会员可以同时属于对应组织机构下的多个部门。
-- 一个会员至少需要属于对应组织机构下的一个部门。
+- 一个成员可以同时属于对应组织机构下的多个部门。
+- 一个成员至少需要属于对应组织机构下的一个部门。
 
 #### 11.2 TableInfo
 Attribute          |Value   
@@ -591,7 +591,7 @@ Table name         |t_member_department
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |会员部门
+Comment            |成员部门
 
 ##### 11.2.1 Columns
 Column             |Type        |Default Value    |Nullable|Comments
@@ -600,14 +600,14 @@ c_id               |varchar(20) |                 |NO      |主键编号
 c_create_datetime  |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime  |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_organization_id  |varchar(20) |                 |NO      |所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
-c_member_id        |varchar(20) |                 |NO      |会员编号
+c_member_id        |varchar(20) |                 |NO      |成员编号
 c_department_id    |varchar(20) |                 |NO      |所属部门编号
 
 ##### 11.2.2 Indexes
 Key                      |Type |Unique|Columns        |Comments
 -------------------------|-----|------|---------------|--------
 PRIMARY                  |BTREE|YES   |c_id           |主键索引
-u_member_id_department_id|BTREE|YES   |c_member_id,c_department_id          |会员编号所属部门编号唯一索引
+u_member_id_department_id|BTREE|YES   |c_member_id,c_department_id          |成员编号所属部门编号唯一索引
 i_department_id          |BTREE|NO    |c_department_id|所属部门编号索引
 
 ##### 11.2.3 DDL
@@ -617,21 +617,21 @@ CREATE TABLE `t_member_department` (
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员编号',
   `c_department_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属部门编号',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `u_member_id_department_id` (`c_member_id`,`c_department_id`) USING BTREE COMMENT '会员编号所属部门编号唯一索引',
+  UNIQUE KEY `u_member_id_department_id` (`c_member_id`,`c_department_id`) USING BTREE COMMENT '成员编号所属部门编号唯一索引',
   KEY `i_department_id` (`c_department_id`) USING BTREE COMMENT '所属部门编号索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员部门'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='成员部门'
 ```
 
 #### 11.3 性能优化
 数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。
 
 
-### 12 会员联系人
+### 12 成员联系人
 #### 12.1 概念与规则
-记录会员的联系人。如果两个会员相互是联系人，这里会有两条数据，也就是说这里记录的数据是单向的。联系人可以是自己所属组织机构以内的也可以是以外的。
+记录成员的联系人。如果两个成员相互是联系人，这里会有两条数据，也就是说这里记录的数据是单向的。联系人可以是自己所属组织机构以内的也可以是以外的。
 
 #### 12.2 TableInfo
 Attribute          |Value   
@@ -640,7 +640,7 @@ Table name         |t_member_contact
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |会员联系人
+Comment            |成员联系人
 
 ##### 12.2.1 Columns
 Column             |Type       |Default Value    |Nullable|Comments
@@ -648,8 +648,8 @@ Column             |Type       |Default Value    |Nullable|Comments
 c_id               |varchar(20)|                 |NO      |主键编号
 c_create_datetime  |datetime   |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime  |datetime   |CURRENT_TIMESTAMP|NO      |修改时间
-c_organization_id  |varchar(20)|                 |NO      |会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
-c_member_id        |varchar(20)|                 |NO      |会员编号
+c_organization_id  |varchar(20)|                 |NO      |成员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
+c_member_id        |varchar(20)|                 |NO      |成员编号
 c_contact_organization_id|varchar(20)|           |NO      |联系人所属组织机构编号[为冗余字段，用于快速确认联系人是否位于本组织机构内部]
 c_contact_member_id|varchar(20)|                 |NO      |联系人编号
 
@@ -666,22 +666,22 @@ CREATE TABLE `t_member_contact` (
   `c_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键编号',
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
+  `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员编号',
   `c_contact_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系人所属组织机构编号[为冗余字段，用于快速确认联系人是否位于本组织机构内部]',
   `c_contact_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系人编号',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `u_member_id_contact_member_id` (`c_member_id`,`c_contact_organization_id`,`c_contact_member_id`) USING BTREE COMMENT '会员编号联系人编号唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员联系人'
+  UNIQUE KEY `u_member_id_contact_member_id` (`c_member_id`,`c_contact_organization_id`,`c_contact_member_id`) USING BTREE COMMENT '成员编号联系人编号唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='成员联系人'
 ```
 
 #### 12.3 性能优化
 数据量大时，如若需要分库分表可以使用字段`c_organization_id`进行数据切分。
 
 
-### 13 群组会员
+### 13 群组成员
 #### 13.1 概念与规则
-记录群组包含的会员，本表为主表用于记录群组与会员关联关系相关的各项业务信息。
+记录群组包含的成员，本表为主表用于记录群组与成员关联关系相关的各项业务信息。
 
 #### 13.2 TableInfo
 Attribute          |Value   
@@ -690,7 +690,7 @@ Table name         |t_group_member
 Engine             |InnoDB
 Charset            |utf8mb4
 Collation          |utf8mb4_general_ci   
-Comment            |群组会员
+Comment            |群组成员
 
 ##### 13.2.1 Columns
 Column              |Type        |Default Value    |Nullable|Comments
@@ -699,15 +699,15 @@ c_id                |varchar(20) |                 |NO      |主键编号
 c_create_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |创建时间
 c_update_datetime   |datetime    |CURRENT_TIMESTAMP|NO      |修改时间
 c_group_id          |varchar(20) |                 |NO      |群组编号
-c_member_id         |varchar(20) |                 |NO      |会员编号
-c_organization_id   |varchar(20) |                 |NO      |会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
+c_member_id         |varchar(20) |                 |NO      |成员编号
+c_organization_id   |varchar(20) |                 |NO      |成员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]
 c_administrator_tag |tinyint     |                 |NO      |群组管理员标记[1:普通人员 3:管理员 7:群主]
 
 ##### 13.2.2 Indexes
 Key                 |Type |Unique|Columns               |Comments
 --------------------|-----|------|----------------------|--------
 PRIMARY             |BTREE|YES   |c_id                  |主键索引
-u_group_id_member_id|BTREE|YES   |c_group_id,c_member_id|群组编号会员编号唯一索引
+u_group_id_member_id|BTREE|YES   |c_group_id,c_member_id|群组编号成员编号唯一索引
 
 ##### 13.2.3 DDL
 ```sql
@@ -716,12 +716,12 @@ CREATE TABLE `t_group_member` (
   `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `c_group_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '群组编号',
-  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员编号',
-  `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
+  `c_member_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员编号',
+  `c_organization_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '成员所属组织机构编号[为冗余字段，主要用于数据分库分表使用]',
   `c_administrator_tag` tinyint NOT NULL COMMENT '群组管理员标记[1:普通人员 3:管理员 7:群主]',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `u_group_id_member_id` (`c_group_id`,`c_member_id`) USING BTREE COMMENT '群组编号会员编号唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='群组会员'
+  UNIQUE KEY `u_group_id_member_id` (`c_group_id`,`c_member_id`) USING BTREE COMMENT '群组编号成员编号唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='群组成员'
 ```
 
 #### 13.3 性能优化
