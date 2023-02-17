@@ -18,6 +18,7 @@
 
     <modules>
         <module>isid-common-starter-lang</module>
+        <module>isid-common-starter-async</module>
     </modules>
 
     <dependencies>
@@ -36,6 +37,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>isid-common-starter-lang</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>isid-common-starter-async</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

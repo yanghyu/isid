@@ -3,17 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>isid-common-parent</artifactId>
+        <artifactId>isid-web-parent</artifactId>
         <groupId>com.github.yanghyu</groupId>
         <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../isid-common-parent/pom.xml</relativePath>
+        <relativePath>../isid-web-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-common-async</artifactId>
+    <artifactId>isid-web-tomcat</artifactId>
 
-    <name>isid-common-async</name>
-    <description>isid-common-async</description>
+    <name>isid-web-tomcat</name>
+    <description>isid-web-tomcat</description>
 
     <dependencies>
         <dependency>
@@ -21,14 +21,8 @@
             <artifactId>isid-common-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.github.yanghyu.isid.web.autoconfigure.mvc.IsidWebMvcAutoConfiguration

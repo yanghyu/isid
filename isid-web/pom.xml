@@ -46,6 +46,7 @@
         <module>isid-web-parent</module>
 
         <module>isid-web-mvc</module>
+        <module>isid-web-tomcat</module>
 
         <module>isid-web-autoconfigure</module>
         <module>isid-web-starter</module>

@@ -26,6 +26,11 @@
             <artifactId>isid-web-mvc</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>isid-web-tomcat</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
