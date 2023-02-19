@@ -19,6 +19,7 @@
     <modules>
         <module>isid-common-starter-lang</module>
         <module>isid-common-starter-async</module>
+        <module>isid-common-starter-sequence</module>
     </modules>
 
     <dependencies>

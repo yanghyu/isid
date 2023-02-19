@@ -3,6 +3,7 @@
 
 ## 二、基础设计
 ### 1 全局唯一编号
+#### 1.1 特点与设计
 首先分析一下一个优秀的编号生成机制需要有哪些特点呢？
 - 全局唯一性，这算是个基本要求，也是系统实现分布式的基础
 - 空间占用小，可减少索引占用空间大小
@@ -123,3 +124,21 @@ public class Base64UrlEncodeAsciiOrderUtil {
 
 }
 ```
+
+#### 1.2 全局唯一性（LEAF）
+##### 1.2.1 概念与规则
+LEAF算法需要依赖一张表来记录当前最大的序列编号，设计可以类似如下所示。
+
+##### 1.2.2 DDL
+```sql
+CREATE TABLE `t_sequence` (
+  `c_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '主键编号[键名]',
+  `c_create_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `c_update_datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `c_current_number` bigint NOT NULL DEFAULT '1' COMMENT '当前编号',
+  `c_default_step_size` int NOT NULL DEFAULT '1000' COMMENT '默认步长',
+  `c_version` bigint NOT NULL DEFAULT '1' COMMENT '版本号',
+  PRIMARY KEY (`c_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='序列'
+```
+
