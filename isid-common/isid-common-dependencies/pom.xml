@@ -59,6 +59,7 @@
         <bc.version>1.68</bc.version>
         <okhttp.version>4.2.2</okhttp.version>
         <hystrix.version>1.5.18</hystrix.version>
+        <mybatis.version>3.5.9</mybatis.version>
 
         <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
         <junit.version>5.7.2</junit.version>
@@ -123,6 +124,11 @@
                 <groupId>com.netflix.hystrix</groupId>
                 <artifactId>hystrix-core</artifactId>
                 <version>${hystrix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
             </dependency>
 
             <dependency>

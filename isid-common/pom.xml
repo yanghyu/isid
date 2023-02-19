@@ -48,6 +48,7 @@
         <module>isid-common-lang</module>
         <module>isid-common-core</module>
         <module>isid-common-async</module>
+        <module>isid-common-sequence</module>
 
         <module>isid-common-autoconfigure</module>
         <module>isid-common-starter</module>
