@@ -25,6 +25,6 @@ public interface SequenceMapper {
     @Update("UPDATE t_sequence " +
             "SET c_current_number = #{currentNumber}, c_version = #{version}, c_update_datetime = #{updateDatetime} " +
             "WHERE c_key = #{key} AND c_version = #{version} - 1")
-    int updateMaxId(@Param("sequence") Sequence sequence);
+    int update(@Param("sequence") Sequence sequence);
 
 }

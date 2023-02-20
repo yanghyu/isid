@@ -41,9 +41,9 @@ public class SequenceDao {
         }
     }
 
-    public int updateMaxId(Sequence sequence) {
+    public int update(Sequence sequence) {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()){
-            int num = sqlSession.update(SEQUENCE_MAPPER_CLASS_NAME + ".updateMaxId", sequence);
+            int num = sqlSession.update(SEQUENCE_MAPPER_CLASS_NAME + ".update", sequence);
             sqlSession.commit();
             return num;
         }

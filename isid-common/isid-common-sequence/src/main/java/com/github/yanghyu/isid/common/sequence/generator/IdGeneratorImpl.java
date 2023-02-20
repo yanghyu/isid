@@ -125,7 +125,7 @@ public class IdGeneratorImpl implements IdGenerator {
                 } else if (segmentQueue.size() < 2 && isSegmentNotLoading(segmentQueue)){
                     applyLoadNewSegment(segmentQueue, key, MIN_STEP);
                 }
-                roll = LoopUtil.loopStatus(roll);
+                roll = LoopUtil.loopStatus(roll, 30);
             }
         } catch (BizException | SysException le) {
             numberResult = new Result<>(le, 0L);

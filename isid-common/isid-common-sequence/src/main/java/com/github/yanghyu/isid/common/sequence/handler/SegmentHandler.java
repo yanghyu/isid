@@ -34,12 +34,12 @@ public class SegmentHandler {
         int updateCount, roll = 0;
         Sequence sequence;
         do {
-            roll = LoopUtil.loopStatus(roll);
+            roll = LoopUtil.loopStatus(roll, 20);
             sequence = getSequence(key);
             sequence.setCurrentNumber(sequence.getCurrentNumber() + stepSize);
             sequence.setUpdateDatetime(LocalDateTime.now());
             sequence.setVersion(sequence.getVersion() + 1);
-            updateCount = sequenceDao.updateMaxId(sequence);
+            updateCount = sequenceDao.update(sequence);
         } while (updateCount < 1);
         Segment segment = new Segment();
         segment.setKey(key);
@@ -54,7 +54,7 @@ public class SegmentHandler {
         int roll = 0;
         Sequence sequence;
         do {
-            roll = LoopUtil.loopStatus(roll);
+            roll = LoopUtil.loopStatus(roll, 10);
             sequence = sequenceDao.get(key);
             if (sequence == null) {
                 synchronized (this) {
