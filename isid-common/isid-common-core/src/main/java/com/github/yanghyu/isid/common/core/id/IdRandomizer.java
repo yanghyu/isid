@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class IdRandomizer {
 
-    private static final Random random = new SecureRandom();
+    private static final Random random = new Random();
 
     private IdRandomizer() { }
 

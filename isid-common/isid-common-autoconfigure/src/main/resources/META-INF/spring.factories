@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.yanghyu.isid.common.autoconfigure.async.IsidAsyncAutoConfiguration
+  com.github.yanghyu.isid.common.autoconfigure.async.IsidAsyncAutoConfiguration,\
+  com.github.yanghyu.isid.common.autoconfigure.sequence.SequenceAutoConfiguration
