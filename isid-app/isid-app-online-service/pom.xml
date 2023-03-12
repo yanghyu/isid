@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>isid-app-service</artifactId>
+    <artifactId>isid-app-online-service</artifactId>
 
-    <name>isid-app-service</name>
-    <description>isid-app-service</description>
+    <name>isid-app-online-service</name>
+    <description>isid-app-online-service</description>
 
     <dependencies>
 <!--        <dependency>-->

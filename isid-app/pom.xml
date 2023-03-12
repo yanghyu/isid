@@ -42,7 +42,8 @@
     </scm>
 
     <modules>
-        <module>isid-app-service</module>
+        <module>isid-app-online-service</module>
+        <module>isid-app-async-service</module>
         <module>isid-app-ui</module>
     </modules>
 

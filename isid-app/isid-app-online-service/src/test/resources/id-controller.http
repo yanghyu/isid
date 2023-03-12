@@ -1,0 +1,11 @@
+
+POST http://{{host}}/external/v1/sys-info/sys-date-time
+Content-Type: application/json
+
+{}
+
+
+
+
+
+
