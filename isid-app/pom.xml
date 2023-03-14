@@ -42,9 +42,11 @@
     </scm>
 
     <modules>
-        <module>isid-app-online-service</module>
-        <module>isid-app-async-service</module>
-        <module>isid-app-ui</module>
+        <module>isid-app-service-online</module><!-- 在线服务 -->
+        <module>isid-app-service-async</module> <!-- 异步服务 -->
+
+        <module>isid-app-ui-vertical</module>   <!-- 竖屏UI -->
+        <module>isid-app-ui-horizontal</module> <!-- 横屏UI -->
     </modules>
 
     <properties>
