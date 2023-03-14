@@ -15,11 +15,15 @@
     <description>isid-app-service-online</description>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>isid-common-starter-sequence</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>isid-web-starter-mvc</artifactId>
@@ -28,6 +32,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>isid-web-starter-tomcat</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
