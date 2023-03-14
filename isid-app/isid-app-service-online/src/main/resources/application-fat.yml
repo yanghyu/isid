@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mysql://39.100.136.215:30100/isid
+    username: master
+    password: Kjmxwed@7789
+    driver-class-name: com.mysql.cj.jdbc.Driver

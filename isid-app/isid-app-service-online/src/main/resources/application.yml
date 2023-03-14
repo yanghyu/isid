@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: isid-app-service-online
+  profiles:
+    active: loc
+
+server:
+  port: 8080
+  additional-ports: 8081,8082
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: ERROR
+    com.github.yanghyu: INFO
+  file:
+    path: logs/${spring.application.name}/${server.port}
+
