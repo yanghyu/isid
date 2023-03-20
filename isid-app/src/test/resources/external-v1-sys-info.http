@@ -1,8 +1,16 @@
+POST http://{{host}}/external/v1/sys-info/generate-id
+Content-Type: application/json
+
+{}
+
+###
 
 POST http://{{host}}/external/v1/sys-info/sys-date-time
 Content-Type: application/json
 
 {}
+
+###
 
 
 

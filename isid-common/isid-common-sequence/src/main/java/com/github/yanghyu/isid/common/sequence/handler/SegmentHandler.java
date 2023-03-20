@@ -39,8 +39,8 @@ public class SegmentHandler {
         sequenceStepSize.setStepSize(stepSize);
         Sequence newSequence = sequenceDao.updateByStepSize(sequenceStepSize);
 
-        logger.info("oldSequence:{}, newSequence:{}, sequenceNumberInterval:{}",
-                oldSequence, newSequence, newSequence.getCurrentNumber() - oldSequence.getCurrentNumber());
+        logger.info("sequenceNumberInterval:{}, oldSequence:{}, newSequence:{}.",
+                newSequence.getCurrentNumber() - oldSequence.getCurrentNumber(), oldSequence, newSequence);
 
         Segment segment = new Segment();
         segment.setKey(key);
