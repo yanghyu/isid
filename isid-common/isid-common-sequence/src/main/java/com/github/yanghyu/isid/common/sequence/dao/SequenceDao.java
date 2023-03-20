@@ -3,6 +3,7 @@ package com.github.yanghyu.isid.common.sequence.dao;
 
 import com.github.yanghyu.isid.common.sequence.mapper.SequenceMapper;
 import com.github.yanghyu.isid.common.sequence.model.Sequence;
+import com.github.yanghyu.isid.common.sequence.model.SequenceStepSize;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -41,11 +42,12 @@ public class SequenceDao {
         }
     }
 
-    public int update(Sequence sequence) {
+    public Sequence updateByStepSize(SequenceStepSize sequenceStepSize) {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()){
-            int num = sqlSession.update(SEQUENCE_MAPPER_CLASS_NAME + ".update", sequence);
+            sqlSession.update(SEQUENCE_MAPPER_CLASS_NAME + ".updateByStepSize", sequenceStepSize);
+            Sequence sequence = sqlSession.selectOne(SEQUENCE_MAPPER_CLASS_NAME + ".get", sequenceStepSize.getKey());
             sqlSession.commit();
-            return num;
+            return sequence;
         }
     }
 

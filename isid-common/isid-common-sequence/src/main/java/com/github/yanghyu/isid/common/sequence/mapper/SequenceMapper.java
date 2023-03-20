@@ -1,6 +1,7 @@
 package com.github.yanghyu.isid.common.sequence.mapper;
 
 import com.github.yanghyu.isid.common.sequence.model.Sequence;
+import com.github.yanghyu.isid.common.sequence.model.SequenceStepSize;
 import org.apache.ibatis.annotations.*;
 
 public interface SequenceMapper {
@@ -23,8 +24,8 @@ public interface SequenceMapper {
     int insert(@Param("sequence") Sequence sequence);
 
     @Update("UPDATE t_sequence " +
-            "SET c_current_number = #{currentNumber}, c_version = #{version}, c_update_datetime = #{updateDatetime} " +
-            "WHERE c_key = #{key} AND c_version = #{version} - 1")
-    int update(@Param("sequence") Sequence sequence);
+            "SET c_current_number = c_current_number + #{stepSize}, c_version = c_version + 1, c_update_datetime = NOW()" +
+            "WHERE c_key = #{key}")
+    int updateByStepSize(@Param("sequenceStepSize") SequenceStepSize sequenceStepSize);
 
 }

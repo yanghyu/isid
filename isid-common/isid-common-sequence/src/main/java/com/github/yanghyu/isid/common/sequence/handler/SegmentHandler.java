@@ -1,11 +1,11 @@
 package com.github.yanghyu.isid.common.sequence.handler;
 
 
-
 import com.github.yanghyu.isid.common.sequence.dao.SequenceDao;
 import com.github.yanghyu.isid.common.sequence.message.SequenceSysMessage;
 import com.github.yanghyu.isid.common.sequence.model.Segment;
 import com.github.yanghyu.isid.common.sequence.model.Sequence;
+import com.github.yanghyu.isid.common.sequence.model.SequenceStepSize;
 import com.github.yanghyu.isid.common.sequence.util.LoopUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,20 +31,21 @@ public class SegmentHandler {
     }
 
     public Segment getSegment(String key, int stepSize) {
-        int updateCount, roll = 0;
-        Sequence sequence;
-        do {
-            roll = LoopUtil.loopStatus(roll, 20);
-            sequence = getSequence(key);
-            sequence.setCurrentNumber(sequence.getCurrentNumber() + stepSize);
-            sequence.setUpdateDatetime(LocalDateTime.now());
-            sequence.setVersion(sequence.getVersion() + 1);
-            updateCount = sequenceDao.update(sequence);
-        } while (updateCount < 1);
+
+        Sequence oldSequence = getSequence(key);
+
+        SequenceStepSize sequenceStepSize = new SequenceStepSize();
+        sequenceStepSize.setKey(key);
+        sequenceStepSize.setStepSize(stepSize);
+        Sequence newSequence = sequenceDao.updateByStepSize(sequenceStepSize);
+
+        logger.info("oldSequence:{}, newSequence:{}, sequenceNumberInterval:{}",
+                oldSequence, newSequence, newSequence.getCurrentNumber() - oldSequence.getCurrentNumber());
+
         Segment segment = new Segment();
         segment.setKey(key);
-        segment.setMaxNumber(sequence.getCurrentNumber());
-        segment.setCurrentNumber(new AtomicLong(sequence.getCurrentNumber() - stepSize));
+        segment.setMaxNumber(newSequence.getCurrentNumber());
+        segment.setCurrentNumber(new AtomicLong(newSequence.getCurrentNumber() - stepSize));
         segment.setStepSize(stepSize);
         segment.setUpdateTimestamp(System.currentTimeMillis());
         return segment;
