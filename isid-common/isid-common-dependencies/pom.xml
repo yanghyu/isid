@@ -6,6 +6,7 @@
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>9</version>
+        <relativePath/>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -48,14 +49,14 @@
         <java.version>1.8</java.version>
         <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 
-        <spring-boot.version>2.6.1</spring-boot.version>
+        <spring-boot.version>2.6.14</spring-boot.version>
 
         <lombok.version>1.18.12</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <swagger.version>1.5.22</swagger.version>
         <springdoc.version>1.6.4</springdoc.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <fastjson.version>1.2.75</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <bc.version>1.68</bc.version>
         <okhttp.version>4.2.2</okhttp.version>
         <hystrix.version>1.5.18</hystrix.version>
